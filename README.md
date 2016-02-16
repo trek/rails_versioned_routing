@@ -1,15 +1,17 @@
 # Versioned Rails Routes
 
 Versioned Rails Routes adds a set of conventions to the Rails Routing DSL
-specfically designed to handle versioned HTTP APIs.
+specifically designed to handle versionsed HTTP APIs.
 
 Versioned Rails Routes adds a `version` method to the Rails Routing DSL.
 
-This extends Routing to limit positive route match results
-to only requests for a HTTP verb/path combination that _also_
-includes an `Accept` header specifiy a specific version.
+This extends Routing to limit positive route match results to only requests
+for a HTTP verb/path combination that _also_ includes an `Accept` header
+[specify a specific version](http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http).
 
-Routes will match any requested version that is equal to or less than the provided version, allowing new versions to be frequently be added with minimal disruption to the public API.
+Routes will match any requested version that is equal to or less than the
+provided version, allowing new versions to be frequently be added with minimal
+disruption to the public API.
 
 Example:
 
@@ -55,13 +57,13 @@ end
 
 
 ### Defining Versioned Routes
-Versioned routes are defined with the `version` method. `version` takes a block
-and all routes defined in that block are limited to that version number (or higher)
-unless the route is redefined at a higher version (see Fallthough Behavior), deprecated
-(see Deprecating Routes In A Version).
+Versioned routes are defined with the `version` method. `version` takes a
+block and all routes defined in that block are limited to that version number
+(or higher) unless the route is redefined at a higher version (see Fallthrough
+Behavior), deprecated (see Deprecating Routes In A Version).
 
-The full routing API is available within the block. Calls to `resource(s)` will result in a
-namespaced controller.
+The full routing API is available within the block. Calls to `resource(s)`
+will result in a namespaced controller.
 
 
 ```ruby
@@ -70,13 +72,14 @@ version(5) do
   get 'some_action', controller: 'foo'
 
   # controller will be V5::TweetsController
-  # locacated in controllers/v5/tweets_controller.rb
+  # located in controllers/v5/tweets_controller.rb
   resources :tweets
 end
 ```
 
 ### Cascading Behavior
-Requests for a verison match any routes declared with a verison number equal or less than the requested version.
+Requests for a version match any routes declared with a version number equal
+or less than the requested version.
 
 Given the following routes:
 
@@ -102,16 +105,17 @@ version(2) do
 end
 ```
 
-without the need for API consumres to know (or care) that the `:friends` resource
-was not duplicated for v2.
+without the need for API consumers to know (or care) that the `:friends`
+resource was not duplicated for v2.
 
-Requests to the `:friends` resource, with an `Accept` header containing `version=1` will
-`404` (there is no route defined in verison <= 1 that matches the route)
+Requests to the `:friends` resource, with an `Accept` header containing
+`version=1` will `404` (there is no route defined in version <= 1 that matches
+the route)
 
 ### Version Ordering
-Requests for a verison match any routes with a verison number equal or less than the requested version.
-To ensure matching occurs in the proper order, higher number versions must be delcared before lower number
-versions
+Requests for a version match any routes with a version number equal or less
+than the requested version. To ensure matching occurs in the proper order,
+higher number versions must be declared before lower number versions
 
 
 Good:
@@ -140,17 +144,17 @@ end
 ```
 
 ### Deprecating Routes In A Version
+
 ### Removing Old Versions
 
-As such, route ordering precendence is important and higher
-numbered versions *MUST* appear earlier in the route set to
-correctly match.
+As such, route ordering precedence is important and higher numbered versions
+*MUST* appear earlier in the route set to correctly match.
 
-Requests to :photos resources defined below where the
-Accept header is `version=2` would incorrectly match
-to the version `1` routes because the `1` is less than `2`.
+Requests to :photos resources defined below where the Accept header is
+`version=2` would incorrectly match to the version `1` routes because the `1`
+is less than `2`.
 
-```
+```ruby
 version(1) do
   resources :photos
 end
@@ -160,11 +164,10 @@ version(2) do
 end
 ```
 
-Requests to :photos resources defined below where the
-Accept header is `version=2` will correctly match
-to the version `2` routes.
+Requests to :photos resources defined below where the Accept header is
+`version=2` will correctly match to the version `2` routes.
 
-```
+```ruby
 version(2) do
   resources :photos
 end
@@ -176,17 +179,16 @@ end
 
 
 ### Deprecating Older Versions
-To
 
 ### Removing Older Versions
 
-When an older version is no longer in use, you should delete the block
-and move any routes not redefined in a higher version into the new lowest
-defined version.
+When an older version is no longer in use, you should delete the block and
+move any routes not redefined in a higher version into the new lowest defined
+version.
 
 Given a routes definition where we'd like to remove v1:
 
-```
+```ruby
 version(3) do
   resources :photos
 end
@@ -201,13 +203,13 @@ version(1) do
 end
 ```
 
-Requests to `/friends`  and `/apartments` for either v3 or v2 are falling through
-to the definition for v1.
+Requests to `/friends`  and `/apartments` for either v3 or v2 are falling
+through to the definition for v1.
 
-If `apartments` is being removed but `friends` is beign retained
-with the removal of v1 redefine your routes like this:
+If `apartments` is being removed but `friends` is beign retained with the
+removal of v1 redefine your routes like this:
 
-```
+```ruby
 version(3) do
   resources :photos
 end
@@ -218,6 +220,6 @@ version(2) do
 end
 ```
 
-Alternatively, you could move all the files for `friends` from
-the `v1` directory to the `v2` directory and avoid having to
-provide a `controller` option.
+Alternatively, you could move all the files for `friends` from the `v1`
+directory to the `v2` directory and avoid having to provide a `controller`
+option.
