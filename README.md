@@ -10,8 +10,8 @@ for a HTTP verb/path combination that _also_ includes an `Accept` header
 [specify a specific version](http://blog.steveklabnik.com/posts/2011-07-03-nobody-understands-rest-or-http).
 
 Routes will match any requested version that is equal to or less than the
-provided version, allowing new versions to be frequently be added with minimal
-disruption to the public API.
+requested version, allowing new versions to be frequently be added with minimal
+disruption to the public-facing API.
 
 Example:
 
@@ -54,7 +54,6 @@ version(1) do
   resources :videos
 end
 ```
-
 
 ### Defining Versioned Routes
 Versioned routes are defined with the `version` method. `version` takes a
@@ -179,6 +178,7 @@ end
 
 
 ### Deprecating Older Versions
+
 
 ### Removing Older Versions
 
