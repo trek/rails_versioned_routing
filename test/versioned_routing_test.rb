@@ -7,12 +7,12 @@ class VersionedRoutingTest < ActionDispatch::IntegrationTest
   end
 
   test "a route with an override will match on the higher verison" do
-    get 'a_path_overridden_from_v1', {}, {'Accept' => 'version=2'}
+    get 'a_path_overridden_from_v1/somevalue/whats/anothervalue', {}, {'Accept' => 'version=2'}
     assert_equal(response.body, 'v2')
   end
 
   test "a route with an override will match on the lower verison if specified" do
-    get 'a_path_overridden_from_v1', {}, {'Accept' => 'version=1'}
+    get 'a_path_overridden_from_v1/somevalue/whats/anothervalue', {}, {'Accept' => 'version=1'}
     assert_equal(response.body, 'v1')
   end
 
