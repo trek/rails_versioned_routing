@@ -7,13 +7,13 @@ require "rails_versioned_routing"
 Gem::Specification.new do |s|
   s.name        = "rails_versioned_routing"
   s.version     = RailsVersionedRouting::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of RailsVersionedRouting."
-  s.description = "TODO: Description of RailsVersionedRouting."
+  s.authors     = ["Trek Glowacki"]
+  s.email       = ["trek.glowacki@gmail.com"]
+  s.homepage    = "https://github.com/trek/rails_versioned_routing"
+  s.summary     = "..."
+  s.description = "..."
 
-  s.files = Dir["{app,config,db,lib}/**/*", "LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{lib}/**/*", "LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.0.13"
