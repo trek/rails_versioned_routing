@@ -10,6 +10,10 @@ class VersionedRoutingTest < ActionDispatch::IntegrationTest
     assert(names(3).include?({:controller=>"v3/sample", :action=>"a_path_only_in_v3"}))
   end
 
+  test "version contains routes defined within version if the HTTP method differs" do
+    assert(names(3).include?({:controller=>"v3/sample", :action=>"posted_a_path_only_in_v3"}))
+  end
+
   test "version does not contains routes defined in later version" do
     assert(!names(2).include?({:controller=>"v3/sample", :action=>"a_path_only_in_v3"}))
   end

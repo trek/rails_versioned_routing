@@ -6,5 +6,6 @@ group :development do
 end
 
 group :test do
-  :rake
+  gem 'pry-byebug'
+  gem 'rake'
 end

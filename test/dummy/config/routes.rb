@@ -4,6 +4,7 @@ Dummy::Application.routes.draw do
   extend RailsVersionedRouting
 
   version(3) do
+    post 'a_path_only_in_v3', controller: 'sample', action: 'posted_a_path_only_in_v3'
     get 'a_path_only_in_v3', controller: 'sample'
   end
 
