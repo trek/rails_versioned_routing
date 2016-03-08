@@ -1,7 +1,7 @@
 require 'rails_versioned_routing/railtie' if defined?(Rails)
 
 module RailsVersionedRouting
-  VERSION = "1.0.0"
+  VERSION = "1.1.0"
 
   class VersionConstraint
     attr_reader :version
