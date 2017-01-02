@@ -1,7 +1,7 @@
 require 'rails_versioned_routing/railtie' if defined?(Rails)
 
 module RailsVersionedRouting
-  VERSION = "1.1.0"
+  VERSION = "1.2.0"
 
   class VersionConstraint
     attr_reader :version
@@ -194,6 +194,21 @@ module RailsVersionedRouting
   def version(version_number, &routes)
     api_constraint = VersionConstraint.new(version: version_number)
     scope(module: "v#{version_number}", constraints: api_constraint, &routes)
+  end
+
+  def removed
+    @real_match = method(:match)
+
+    # temporarily overrides `match` method in routes file
+    def match(*args)
+      @real_match.call(args[0], to: Proc.new { raise ActionController::RoutingError.new('Not Found') }, via: args[1][:via])
+    end
+
+    yield
+
+    def match(*args)
+      @real_match.call(*args)
+    end
   end
 
   def self.group_by_version
