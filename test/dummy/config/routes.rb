@@ -11,10 +11,15 @@ Dummy::Application.routes.draw do
   version(2) do
     get 'a_path_overridden_from_v1/:id/whats/:ok', controller: 'sample', action: 'a_path_overridden_from_v1'
     get 'a_path_in_v2', controller: 'sample'
+
+    removed do
+      get 'another_path_in_v1', controller: 'sample'
+    end
   end
 
   version(1) do
     get 'a_path_in_v1', controller: 'sample'
+    get 'another_path_in_v1', controller: 'sample'
     get 'a_path_overridden_from_v1/:id/whats/:ok', controller: 'sample', action: 'a_path_overridden_from_v1'
   end
 

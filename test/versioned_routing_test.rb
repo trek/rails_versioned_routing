@@ -26,4 +26,22 @@ class VersionedRoutingTest < ActionDispatch::IntegrationTest
       get '/a_path_only_in_v3', {}, {'Accept' => 'version=2'}
     end
   end
+
+  test "a route removed in a version will return a 404" do
+    get '/another_path_in_v1', {}, {'Accept' => 'version=1'}
+    assert_equal(response.status, 200)
+
+    assert_raise ActionController::RoutingError do
+      get '/another_path_in_v1', {}, {'Accept' => 'version=2'}
+    end
+  end
+
+  test "a route removed in a version lower than it self will return a 404" do
+    get '/another_path_in_v1', {}, {'Accept' => 'version=1'}
+    assert_equal(response.status, 200)
+
+    assert_raise ActionController::RoutingError do
+      get '/another_path_in_v1', {}, {'Accept' => 'version=3'}
+    end
+  end
 end

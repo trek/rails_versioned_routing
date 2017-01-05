@@ -3,5 +3,9 @@ module V1
     def a_path_overridden_from_v1
       render text: 'v1'
     end
+
+    def another_path_in_v1
+      render text: 'v1'
+    end
   end
 end
