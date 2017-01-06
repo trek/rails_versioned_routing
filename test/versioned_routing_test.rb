@@ -44,4 +44,22 @@ class VersionedRoutingTest < ActionDispatch::IntegrationTest
       get '/another_path_in_v1', {}, {'Accept' => 'version=3'}
     end
   end
+
+  test "a route that hasn't been deprecated in a version will not return a Warning Header" do
+    get '/a_path_in_v1_deprecated', {}, {'Accept' => 'version=1'}
+    assert_equal(response.status, 200)
+    assert_equal(response.headers['X-Deprecated-Endpoint'], nil)
+  end
+
+  test "a route deprecated in a version will return a Warning Header" do
+    get '/a_path_in_v1_deprecated', {}, {'Accept' => 'version=2'}
+    assert_equal(response.status, 200)
+    assert_equal(response.headers['X-Deprecated-Endpoint'], 'This endpoint will be removed in an upcoming api version.')
+  end
+
+  test "a route that hasn't been deprecated in a version lower than it self will return Warning Header" do
+    get '/a_path_in_v1_deprecated', {}, {'Accept' => 'version=3'}
+    assert_equal(response.status, 200)
+    assert_equal(response.headers['X-Deprecated-Endpoint'], 'This endpoint will be removed in an upcoming api version.')
+  end
 end

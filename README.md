@@ -142,10 +142,6 @@ version(2) do
 end
 ```
 
-### Deprecating Routes In A Version
-
-### Removing Old Versions
-
 As such, route ordering precedence is important and higher numbered versions
 *MUST* appear earlier in the route set to correctly match.
 
@@ -175,10 +171,6 @@ version(1) do
   resources :photos
 end
 ```
-
-
-### Deprecating Older Versions
-
 
 ### Removing Older Versions
 
@@ -223,6 +215,48 @@ end
 Alternatively, you could move all the files for `friends` from the `v1`
 directory to the `v2` directory and avoid having to provide a `controller`
 option.
+
+### Deprecate routes
+
+Wrapping routes in a `deprecate` block will return a `X-Deprecated-Endpoint` header in the response for those routes.
+
+NOTE: You must add this gem's custom `RailsVersionedRouting::Middleware` middleware for this functionality to work.
+
+In your application.rb -
+
+```
+config.middleware.use RailsVersionedRouting::Middleware
+```
+
+Routing example-
+
+```ruby
+version(3) do
+  ...
+end
+
+version(2) do
+  ...
+
+  deprecated do
+    resources :photos, only: [:show]
+  end
+end
+
+version(1) do
+  ...
+
+  resources :photos, only: [:show]
+end
+```
+
+In the above example, the photos show route is still accessible in v1, but will return a `X-Deprecated-Endpoint` header when accessed in v2 and v3.
+
+Header-
+
+```
+X-Deprecated-Endpoint: This endpoint will be removed in an upcoming api version
+```
 
 ### Remove routes
 

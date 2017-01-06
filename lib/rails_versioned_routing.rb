@@ -1,7 +1,8 @@
 require 'rails_versioned_routing/railtie' if defined?(Rails)
+require 'rails_versioned_routing/middleware'
 
 module RailsVersionedRouting
-  VERSION = "1.2.0"
+  VERSION = "1.3.0"
 
   class VersionConstraint
     attr_reader :version
@@ -20,6 +21,17 @@ module RailsVersionedRouting
       else
         return @version == 1
       end
+    end
+  end
+
+  class DeprecatedConstraint
+    # We are using a constraint as way to access the request
+    # so that we can communicate with the middleware to add the
+    # response header
+    def matches?(request)
+      request.env['deprecated_endpoint'] = true
+
+      true
     end
   end
 
@@ -194,6 +206,11 @@ module RailsVersionedRouting
   def version(version_number, &routes)
     api_constraint = VersionConstraint.new(version: version_number)
     scope(module: "v#{version_number}", constraints: api_constraint, &routes)
+  end
+
+  def deprecated(&routes)
+    deprecated_constraint = DeprecatedConstraint.new
+    scope(constraints: deprecated_constraint, &routes)
   end
 
   def removed
