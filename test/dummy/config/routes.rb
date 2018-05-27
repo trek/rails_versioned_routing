@@ -3,6 +3,11 @@ require 'rails_versioned_routing'
 Dummy::Application.routes.draw do
   extend RailsVersionedRouting
 
+  beta! do
+    get 'a_path_overridden_from_v1/:id/whats/:ok', controller: 'sample', action: 'a_path_overridden_from_v1'
+    get 'a_path_only_in_beta', controller: 'sample'
+  end
+
   version(3) do
     post 'a_path_only_in_v3', controller: 'sample', action: 'posted_a_path_only_in_v3'
     get 'a_path_only_in_v3', controller: 'sample'

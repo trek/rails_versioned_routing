@@ -1,9 +1,23 @@
 require 'rails_versioned_routing/railtie' if defined?(Rails)
 
 module RailsVersionedRouting
-  VERSION = "1.3.0"
+  VERSION = "1.4.1"
 
   class VersionConstraint
+  end
+
+  class BetaVersionConstraint < VersionConstraint
+    def matches?(request)
+      accept = request.headers.fetch(:accept, '*/*')
+      accept.match(/version=beta/)
+    end
+
+    def version
+      Float::INFINITY
+    end
+  end
+
+  class NumberedVersionConstraint < VersionConstraint
     attr_reader :version
 
     def initialize(options)
@@ -191,8 +205,13 @@ module RailsVersionedRouting
     end
   end
 
+  def beta!(&routes)
+    api_constraint = BetaVersionConstraint.new
+    scope(module: 'beta', constraints: api_constraint, &routes)
+  end
+
   def version(version_number, &routes)
-    api_constraint = VersionConstraint.new(version: version_number)
+    api_constraint = NumberedVersionConstraint.new(version: version_number)
     scope(module: "v#{version_number}", constraints: api_constraint, &routes)
   end
 
