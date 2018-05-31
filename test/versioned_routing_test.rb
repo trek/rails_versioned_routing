@@ -1,6 +1,22 @@
 require 'test_helper'
 
 class VersionedRoutingTest < ActionDispatch::IntegrationTest
+  test "a request with a 'beta' version matches as the highest version number" do
+    get '/a_path_overridden_from_v1/somevalue/whats/anothervalue', {}, {'Accept' => 'version=beta'}
+    assert_equal(response.body, 'beta')
+  end
+
+  test "a route defined in beta matches for beta requests" do
+    get '/a_path_only_in_beta', {}, {'Accept' => 'version=beta'}
+    assert_equal(response.body, 'beta')
+  end
+
+  test "a route defined in beta is not present in lower versions" do
+    assert_raise ActionController::RoutingError do
+      get '/a_path_only_in_beta', {}, {'Accept' => 'version=2'}
+    end
+  end
+
   test "a request without a verison cascades to versionless routes" do
     get '/final_fallback'
     assert_equal(response.body, 'v0')
